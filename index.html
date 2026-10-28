@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b91c1c">
+<meta name="description" content="Plan familiar de emergencia: mochilas de 72 horas, reservas por casa, plan de comunicación y guías de qué hacer. Funciona sin conexión.">
+<title>Plan Familiar de Emergencia</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f7f4ef;--bg2:#fffdfa;--card:#ffffff;--line:#e7e0d6;--ink:#1f1a17;--ink2:#5b524a;--ink3:#8a8076;
+  --pri:#b91c1c;--pri2:#dc2626;--pri-soft:#fde8e6;--ok:#15803d;--ok-soft:#e3f4e8;--warn:#b45309;--warn-soft:#fdf0dc;--bad:#b91c1c;
+  --c-bag:#c2410c;--c-home:#0369a1;--c-car:#6d28d9;--c-plan:#15803d;--c-guide:#b45309;--c-tel:#b91c1c;
+  --btn:#b91c1c;--r:16px;--safe-b:env(safe-area-inset-bottom,0px);--shadow:0 1px 2px #0000000d,0 4px 14px #00000008;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141110;--bg2:#1b1715;--card:#211c19;--line:#352d28;--ink:#f3ede7;--ink2:#c3b8ad;--ink3:#8f847a;
+  --pri:#f87171;--pri2:#ef4444;--pri-soft:#3b1717;--ok:#4ade80;--ok-soft:#14301d;--warn:#fbbf24;--warn-soft:#3a2a0c;--bad:#f87171;
+  --c-bag:#fb923c;--c-home:#38bdf8;--c-car:#a78bfa;--c-plan:#4ade80;--c-guide:#fbbf24;--c-tel:#f87171;--shadow:none;--btn:#b91c1c}}
+:root[data-theme="dark"]{
+  --bg:#141110;--bg2:#1b1715;--card:#211c19;--line:#352d28;--ink:#f3ede7;--ink2:#c3b8ad;--ink3:#8f847a;
+  --pri:#f87171;--pri2:#ef4444;--pri-soft:#3b1717;--ok:#4ade80;--ok-soft:#14301d;--warn:#fbbf24;--warn-soft:#3a2a0c;--bad:#f87171;
+  --c-bag:#fb923c;--c-home:#38bdf8;--c-car:#a78bfa;--c-plan:#4ade80;--c-guide:#fbbf24;--c-tel:#f87171;--shadow:none;--btn:#b91c1c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+#app{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:calc(80px + var(--safe-b))}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid transparent}
+header.top .brand{flex:1;min-width:0}
+header.top h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top p{margin:2px 0 0;font-size:12.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--btn);display:grid;place-items:center;flex:none}
+.logo svg{width:24px;height:24px;color:#fff}
+.iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none}
+.iconbtn svg{width:21px;height:21px}
+main{padding:4px 16px 16px}
+h2.v{font-size:22px;margin:6px 2px 14px;letter-spacing:-.01em}
+.sect{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink3);margin:22px 2px 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.muted{color:var(--ink2)}.small{font-size:13px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 15px;font-weight:650}
+.btn.pri{background:var(--btn);border-color:var(--btn);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.ghost{background:transparent}
+.btn.dan{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
+.btn.sm{padding:7px 11px;font-size:13.5px;border-radius:10px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+/* home */
+.hero{display:flex;gap:16px;align-items:center}
+.ring{width:96px;height:96px;flex:none;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:800}
+.alerts{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.alert{display:flex;gap:8px;align-items:center;font-size:13.5px;font-weight:600;border-radius:10px;padding:7px 10px}
+.alert svg{width:17px;height:17px;flex:none}
+.alert.bad{background:var(--pri-soft);color:var(--bad)}.alert.warn{background:var(--warn-soft);color:var(--warn)}.alert.ok{background:var(--ok-soft);color:var(--ok)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qbtn{display:flex;align-items:center;gap:10px;border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--card);font-weight:700;text-align:left;box-shadow:var(--shadow)}
+.qbtn svg{width:24px;height:24px;flex:none}
+.qbtn.call{background:var(--btn);border-color:var(--btn);color:#fff}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{border:1px solid var(--line);background:var(--card);border-radius:var(--r);padding:14px;text-align:left;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;min-height:118px}
+.tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--k) 14%,transparent);color:var(--k)}
+.tile .ic svg{width:22px;height:22px}
+.tile b{font-size:15.5px}.tile small{color:var(--ink3);font-size:12.5px}
+.bar{height:7px;border-radius:5px;background:color-mix(in srgb,var(--ink) 9%,transparent);overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);border-radius:5px;transition:width .3s}
+/* tabs */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:650;font-size:14px;display:flex;align-items:center;gap:7px;color:var(--ink2)}
+.tabs button svg{width:17px;height:17px;color:var(--k)}
+.tabs button em{font-style:normal;font-size:12px;color:var(--ink3)}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}.tabs button.on em{color:var(--bg);opacity:.75}
+.art svg{width:100%;height:auto;display:block;border-radius:var(--r)}
+.note{font-size:14px;color:var(--ink2);line-height:1.5;margin:12px 2px 8px}
+.count{font-size:12.5px;color:var(--ink3);margin:6px 2px 10px}
+.item{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 12px;margin-bottom:7px}
+.item.on{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
+.item.on .tx>span{color:var(--ink2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ok) 60%,transparent)}
+.chk{width:28px;height:28px;flex:none;border-radius:8px;border:2px solid var(--ink3);background:transparent;display:grid;place-items:center;padding:0;color:#fff}
+.chk svg{width:18px;height:18px}
+.item.on .chk{background:var(--ok);border-color:var(--ok)}
+.tx{flex:1;min-width:0;font-size:15px;line-height:1.4}
+.qty{display:inline-block;font-weight:750;color:var(--ink)}
+.exp{position:relative;display:inline-block;margin-top:6px}.exp input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+.xp{display:inline-block;font-size:12px;border:1px dashed var(--line);border-radius:8px;padding:2px 8px;color:var(--ink3)}
+.xp.warn{border:1px solid var(--warn);color:var(--warn);background:var(--warn-soft)}.xp.bad{border:1px solid var(--bad);color:var(--bad);background:var(--pri-soft)}
+.sub{font-size:12.5px;color:var(--ink3);margin-top:3px}
+/* forms */
+label.f{display:block;margin-bottom:12px}
+label.f>span{display:block;font-size:13px;color:var(--ink2);margin-bottom:5px;font-weight:600}
+input.in,select.in,textarea.in{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15.5px;outline:0}
+textarea.in{min-height:76px;resize:vertical;line-height:1.45}
+input.in:focus,select.in:focus,textarea.in:focus{border-color:var(--pri)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg2)}
+.stepper button{width:42px;height:42px;border:0;background:transparent;font-size:20px;font-weight:700}
+.stepper b{flex:1;text-align:center;font-size:16px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0}
+.switch input{width:46px;height:26px;appearance:none;background:var(--line);border-radius:999px;position:relative;transition:.2s;flex:none}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 2px #0003}
+.switch input:checked{background:var(--ok)}.switch input:checked::after{left:23px}
+.hh{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;background:var(--bg2)}
+.hh h4{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.person{display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 12px;margin-bottom:7px;width:100%;text-align:left}
+.person .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:color-mix(in srgb,var(--c-plan) 16%,transparent);color:var(--c-plan);flex:none}
+.person .tx b{display:block;font-size:15px}.person .tx small{color:var(--ink3);font-size:12.5px}
+/* guides */
+.gcard{display:flex;gap:12px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.gcard .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--k) 14%,transparent);color:var(--k)}
+.gcard .ic svg{width:24px;height:24px}
+.gcard b{display:block;font-size:16px}.gcard small{color:var(--ink3);font-size:13px}
+.phase{margin:14px 0}
+.phase h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 8px;color:var(--k)}
+.phase ol{margin:0;padding-left:22px}.phase li{margin:0 0 8px;line-height:1.5;font-size:15.5px}
+/* contacts */
+.tel{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+.tel .num{font-size:22px;font-weight:800;color:var(--c-tel);min-width:64px}
+.tel .tx{flex:1}.tel .tx b{display:block}.tel .tx small{color:var(--ink3)}
+.tel .call{width:42px;height:42px;border-radius:50%;background:var(--btn);color:#fff;display:grid;place-items:center;flex:none}
+.tel .call svg{width:20px;height:20px}
+/* nav */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+nav.bottom .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.bottom button{border:0;background:none;padding:9px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:650;color:var(--ink3);min-width:0}
+nav.bottom button svg{width:23px;height:23px}
+nav.bottom button.on{color:var(--pri)}
+/* modal & toast */
+.modal{position:fixed;inset:0;z-index:90;background:#0008;display:flex;align-items:flex-end;justify-content:center}
+.modal .sh{background:var(--bg);width:100%;max-width:720px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + var(--safe-b));max-height:92vh;overflow:auto}
+.modal h3{margin:0 0 14px;font-size:19px}
+.toast{position:fixed;left:50%;bottom:calc(92px + var(--safe-b));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:650;z-index:200;max-width:90vw;box-shadow:0 6px 20px #0004}
+.foot{color:var(--ink3);font-size:12px;text-align:center;margin:26px 8px 8px;line-height:1.55}
+.wiz-step{font-size:12.5px;color:var(--ink3);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+/* print */
+#print{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  #app,nav.bottom,.toast,.modal{display:none!important}
+  #print{display:block;font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#000}
+  #print h1{font-size:18pt;margin:0 0 4pt}#print h2{font-size:13pt;margin:14pt 0 6pt;border-bottom:1.5pt solid #000;padding-bottom:2pt}
+  #print table{width:100%;border-collapse:collapse;margin:4pt 0 8pt;background:#fff}
+  #print th,#print td{border:1pt solid #000;padding:4pt 6pt;text-align:left;vertical-align:top;background:#fff;color:#000}
+  #print th{font-weight:bold}
+  #print .box{display:inline-block;width:10pt;height:10pt;border:1pt solid #000;margin-right:4pt;vertical-align:-1pt}
+  #print .pb{page-break-before:always}
+  @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="bottom" id="navwrap"><div class="in" id="nav"></div></nav>
+<div id="print"></div>
+<input type="file" id="fpick" accept=".json,application/json" class="hidden">
+<script>
+'use strict';
+/* ========== ÍCONOS ========== */
+const I={
+ shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12.5l2 2 4-4.5"/>',
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+ bag:'<path d="M6 9a6 6 0 0 1 12 0v12H6z"/><path d="M9 5V3h6v2M9 14h6M9 17h6"/>',
+ car:'<path d="M4 16V12l2-5h12l2 5v4"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/><path d="M6 12h12"/>',
+ plan:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+ guide:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 7h6M9 11h6"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+ back:'<path d="M15 18l-6-6 6-6"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ warn:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ ok:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+ share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/>',
+ print:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+ trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/>',
+ quake:'<path d="M2 12h3l2-5 3 10 3-14 3 12 2-3h4"/>',
+ flood:'<path d="M2 15c2 0 2.5-2 5-2s3 2 5 2 2.5-2 5-2 3 2 5 2"/><path d="M2 19.5c2 0 2.5-2 5-2s3 2 5 2 2.5-2 5-2 3 2 5 2"/><path d="M12 3s4 4.5 4 7a4 4 0 0 1-8 0c0-2.5 4-7 4-7z"/>',
+ fire:'<path d="M12 3c.5 3.5 5 5.5 5 10.5a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5.5.5 1.5 1.5 2.5 2.5 3 0-3-.5-5.5 0-8z"/>',
+ drop:'<path d="M12 3s6 7 6 11.5a6 6 0 0 1-12 0C6 10 12 3 12 3z"/><path d="M4 4l16 16"/>',
+ bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+ road:'<path d="M5 21L9 3M19 21L15 3M12 5v2M12 11v2M12 17v2"/>',
+ run:'<circle cx="14" cy="4" r="2"/><path d="M8 21l3-6 3 2v4M7 12l3-4 4 1 2 3h3M11 8l-1 5"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ download:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+ upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
+ refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'
+};
+const svg=(n,a='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${a}>${I[n]||''}</svg>`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9);
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2300)}
+
+/* ========== ESTADO ========== */
+const KEY='pfe_v1';
+const DEF=()=>({v:1,setup:false,family:'',days:14,households:[],persons:[],plan:{},contacts:[],done:{},exp:{},review:null,theme:'auto'});
+let ST=DEF();
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&typeof j==='object')ST=Object.assign(DEF(),j)}catch(e){}}
+let saveT=null;
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){toast('No se pudo guardar en este navegador')}},200)}
+function applyTheme(){const r=document.documentElement;if(ST.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',ST.theme)}
+
+/* ========== CÁLCULOS ========== */
+const JUG=18.9; // garrafón de 5 galones
+const fmt=(n,d=1)=>{const v=Math.round(n*10**d)/10**d;return v.toLocaleString('es-PA')};
+const totalPeople=()=>ST.households.reduce((a,h)=>a+(+h.people||0),0);
+const anyCar=()=>ST.households.some(h=>h.car);
+const sumOf=k=>ST.households.reduce((a,h)=>a+(+h[k]||0),0);
+
+function bagItems(){
+ const n=totalPeople();const L=[
+ ['b_agua',`Agua potable: mínimo 2 L por persona en la mochila`,1],
+ ['b_comida','Alimentos listos para comer: enlatados, barras, galletas, frutos secos',1],
+ ['b_abrelatas','Abrelatas manual'],
+ ['b_ropa','Muda de ropa, ropa interior y chaqueta impermeable'],
+ ['b_calzado','Calzado resistente y cerrado'],
+ ['b_linterna','Linterna con pilas de repuesto',1],
+ ['b_botiquin','Botiquín: vendas, gasas, antiséptico, curitas'],
+ ['b_meds','Medicamentos personales para 3 días o más',1],
+ ['b_docs','Copias de cédula y documentos clave en bolsa hermética'],
+ ['b_contactos','Lista de contactos de emergencia en papel'],
+ ['b_power','Power bank cargado y cable del celular'],
+ ['b_radio','Radio a pilas o de manivela'],
+ ['b_higiene','Higiene: papel, jabón, toallas húmedas, gel'],
+ ['b_mascarillas','Mascarillas y guantes'],
+ ['b_silbato','Silbato para pedir ayuda'],
+ ['b_manta','Manta térmica o cobija ligera'],
+ ['b_efectivo','Efectivo en billetes pequeños'],
+ ['b_llaves','Copia de llaves de casa y carro'],
+ ['b_bolsas','Bolsas plásticas y de basura'],
+ ['b_fuego','Encendedor o fósforos en bolsa impermeable'],
+ ['b_navaja','Navaja multiuso']];
+ if(sumOf('babies'))L.push(['b_bebe','Bebés: pañales, toallitas, fórmula o leche, biberón y una muda extra',1]);
+ if(sumOf('elderly'))L.push(['b_mayor','Adultos mayores: lentes de repuesto, lista de medicinas y dosis, apoyo para caminar']);
+ if(sumOf('pets'))L.push(['b_mascota','Mascotas: comida, agua, correa o transportadora y carné de vacunas',1]);
+ return L.map(([id,t,e])=>({id,t,e:!!e}));
+}
+function houseItems(h){
+ const n=+h.people||0,D=ST.days,others=totalPeople()-n;
+ const water=4*n*D,jugs=Math.ceil(water/JUG);
+ const L=[
+ [`agua`,`Agua para tomar y cocinar`,`${fmt(water,0)} L · ${jugs} ${jugs===1?'garrafón':'garrafones'} de 5 gal`,1],
+ [`aseo`,`Agua de aseo en tanque o recipientes tapados`,`Ideal: ${fmt(10*n,0)} L por día`],
+ [`arroz`,`Arroz`,`${fmt(0.14*n*D)} kg`,1],
+ [`menestras`,`Menestras (frijoles, lentejas)`,`${fmt(0.11*n*D)} kg`,1],
+ [`latas`,`Enlatados (atún, sardinas, carne, vegetales)`,`${n*D} latas`,1],
+ [`avena`,`Avena o cereal`,`${fmt(0.07*n*D)} kg`,1],
+ [`aceite`,`Aceite`,`${fmt(0.035*n*D)} L`,1],
+ [`basicos`,`Azúcar, sal, café, leche en polvo`,'',1],
+ [`gas`,`Tanque de gas de reserva o forma alterna de cocinar`,''],
+ [`luz`,`Linternas y pilas (evita velas cerca de cortinas)`,'',1],
+ [`radio`,`Radio a pilas o de manivela`,''],
+ [`energia`,`Power bank o panel solar pequeño`,''],
+ [`botiquin`,`Botiquín completo de casa`,''],
+ [`meds`,`Medicinas de uso diario para 1 mes`,'',1],
+ [`cloro`,`Cloro sin aroma para tratar agua`,'',1],
+ [`efectivo`,`Efectivo guardado`,''],
+ [`docs`,`Copias de documentos de la casa (escrituras, seguros)`,''],
+ [`extintor`,`Extintor revisado`,'',1],
+ [`llaves`,`Saber cerrar la llave de gas, agua y el breaker`,'']];
+ if(+h.babies)L.push([`bebe`,`Bebés: pañales y fórmula`,`${(+h.babies)*8*D} pañales aprox.`,1]);
+ if(+h.elderly)L.push([`mayor`,`Adultos mayores: medicinas, pañales de adulto si aplica, silla o bastón`,'',1]);
+ if(+h.pets)L.push([`mascota`,`Mascotas: comida y agua`,`${fmt(1*(+h.pets)*D,0)} L de agua aprox.`,1]);
+ if(others>0)L.push([`huespedes`,`Colchonetas y cobijas para recibir a las otras casas`,`${others} persona${others===1?'':'s'}`]);
+ return L.map(([k,t,q,e])=>({id:`h_${h.id}_${k}`,t,q,e:!!e}));
+}
+function carItems(){return [
+ ['c_tanque','Tanque por encima de la mitad (hábito)'],['c_agua','Agua: 4 L',1],['c_snacks','Snacks no perecederos',1],
+ ['c_repuesto','Llanta de repuesto revisada, gato y llave de ruedas'],['c_cables','Cables para pasar corriente'],
+ ['c_herr','Herramientas básicas y cinta adhesiva'],['c_triang','Triángulos y chaleco reflectivo'],['c_linterna','Linterna'],
+ ['c_botiquin','Botiquín'],['c_manta','Cobija o manta térmica'],['c_cargador','Cargador de celular para el carro'],
+ ['c_mapa','Mapa descargado para usar sin internet']].map(([id,t,e])=>({id,t,e:!!e}))}
+function planItems(){return [
+ ['f_hablado','Plan conversado con toda la familia'],['f_nube','Copias de documentos de todos en la nube'],
+ ['f_papel','Copia impresa de este plan en cada casa'],['f_simulacro','Simulacro hecho: salir con la mochila en 10 minutos'],
+ ['f_ninos','Los niños saben su dirección y un número de contacto']].map(([id,t])=>({id,t,e:false}))}
+function sections(){
+ const s=[{id:'bag',name:'Mochila 72 h',ic:'bag',k:'--c-bag',items:bagItems()}];
+ ST.households.forEach(h=>s.push({id:'h:'+h.id,name:h.name||'Casa',ic:'home',k:'--c-home',items:houseItems(h),hh:h}));
+ if(anyCar())s.push({id:'car',name:'Carro',ic:'car',k:'--c-car',items:carItems()});
+ return s;
+}
+const prog=items=>{const n=items.length,d=items.filter(i=>ST.done[i.id]).length;return{n,d,p:n?Math.round(d*100/n):0}};
+function allItems(){return sections().flatMap(s=>s.items).concat(planItems())}
+function totalProg(){return prog(allItems())}
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function daysUntil(iso){const [y,m,d]=iso.split('-').map(Number);const t=new Date();t.setHours(0,0,0,0);return Math.round((new Date(y,m-1,d)-t)/86400000)}
+function alerts(){
+ const valid=new Set(allItems().map(i=>i.id));let expired=0,soon=0;
+ Object.entries(ST.exp).forEach(([id,iso])=>{if(!iso||!valid.has(id))return;const dd=daysUntil(iso);if(dd<0)expired++;else if(dd<=30)soon++});
+ const since=ST.review?-daysUntil(ST.review):null;
+ return{expired,soon,since,reviewDue:since===null||since>=180};
+}
+function expTag(iso){const dd=daysUntil(iso);if(dd<0)return '<span class="xp bad">Vencido</span>';if(dd<=30)return `<span class="xp warn">Vence en ${dd} d</span>`;const [y,m,d]=iso.split('-');return `<span class="xp">Vence ${d}/${m}/${y}</span>`}
+
+/* ========== ILUSTRACIONES PROPIAS ========== */
+function artBag(n){
+ const pts=[['bag',40,44],['drop',40,88],['ok',40,132],['plan',280,44],['bolt',280,88],['phone',280,132]];
+ return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-bag) 10%,var(--card))"/>
+ ${pts.map(([ic,x,y],i)=>`<line x1="${x<160?x+20:x-20}" y1="${y}" x2="${x<160?128:192}" y2="${76+i%3*26}" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/><circle cx="${x}" cy="${y}" r="19" fill="var(--card)" stroke="var(--line)" stroke-width="1.5"/><g transform="translate(${x-11},${y-11}) scale(.92)" fill="none" stroke="var(--c-bag)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[ic==='bag'?'shield':ic]}</g>`).join('')}
+ <g transform="translate(118,10)">
+  <path d="M26 40 Q26 12 48 12 L58 12 Q80 12 80 40" fill="none" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/>
+  <rect x="8" y="36" width="90" height="116" rx="22" fill="#c2410c"/><rect x="8" y="36" width="90" height="42" rx="22" fill="#ea580c"/>
+  <rect x="22" y="90" width="62" height="46" rx="11" fill="#9a3412"/><rect x="43" y="101" width="20" height="20" rx="4" fill="#fff7ed"/><path d="M53 104v14M46 111h14" stroke="#dc2626" stroke-width="4"/>
+  <rect x="47" y="72" width="12" height="8" rx="2" fill="#fed7aa"/></g>
+ <text x="160" y="171" fill="var(--ink2)" font-size="11.5" text-anchor="middle" font-family="system-ui" font-weight="600">${n} mochila${n===1?'':'s'} · 1 por persona · 72 h</text></svg>`;
+}
+function artHouse(h){
+ const n=+h.people||0,water=4*n*ST.days,jugs=Math.ceil(water/JUG),show=Math.min(jugs,12);
+ return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-home) 10%,var(--card))"/>
+ <path d="M28 88 L96 34 L164 88" fill="none" stroke="var(--c-home)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+ <rect x="44" y="84" width="104" height="70" rx="5" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+ <rect x="85" y="118" width="22" height="36" rx="2" fill="color-mix(in srgb,var(--c-home) 25%,var(--card))"/>
+ ${Array.from({length:Math.min(n,6)},(_,i)=>{const c=Math.min(n,6),x=96-(c-1)*10+i*20;return `<g fill="var(--ink2)"><circle cx="${x}" cy="96" r="5"/><rect x="${x-5.5}" y="102" width="11" height="11" rx="4"/></g>`}).join('')}
+ ${n>6?`<text x="96" y="78" fill="var(--ink2)" font-size="11" text-anchor="middle" font-family="system-ui">+${n-6}</text>`:''}
+ <g transform="translate(184,30)">${Array.from({length:show},(_,i)=>{const r=Math.floor(i/4),c=i%4;return `<g transform="translate(${c*30},${r*36})"><rect x="2" y="7" width="22" height="26" rx="6" fill="color-mix(in srgb,var(--c-home) 22%,var(--card))" stroke="var(--c-home)" stroke-width="1.6"/><rect x="8" y="1" width="10" height="7" rx="2" fill="var(--c-home)"/></g>`}).join('')}</g>
+ <text x="96" y="171" fill="var(--ink2)" font-size="11.5" text-anchor="middle" font-family="system-ui" font-weight="600">${n} persona${n===1?'':'s'} · ${ST.days} días</text>
+ <text x="242" y="170" fill="var(--c-home)" font-size="17" font-weight="800" text-anchor="middle" font-family="system-ui">${fmt(water,0)} L</text></svg>`;
+}
+function artCar(){
+ return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-car) 10%,var(--card))"/>
+ <path d="M26 116 L42 84 Q48 74 60 74 L148 74 Q160 74 170 84 L194 108 L220 112 Q234 114 234 128 L234 136 L26 136 Z" fill="var(--c-car)"/>
+ <path d="M56 82 L144 82 Q152 82 158 88 L174 106 L48 106 Z" fill="var(--card)" opacity=".75"/><line x1="102" y1="82" x2="102" y2="106" stroke="var(--c-car)" stroke-width="4"/>
+ <circle cx="70" cy="136" r="17" fill="#1f1a17"/><circle cx="70" cy="136" r="7" fill="#a8a29e"/><circle cx="194" cy="136" r="17" fill="#1f1a17"/><circle cx="194" cy="136" r="7" fill="#a8a29e"/>
+ <g transform="translate(272,92)"><path d="M-32 0 A32 32 0 0 1 0 -32" fill="none" stroke="#dc2626" stroke-width="10"/><path d="M0 -32 A32 32 0 0 1 32 0" fill="none" stroke="#16a34a" stroke-width="10"/>
+ <line x1="0" y1="0" x2="19" y2="-21" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><circle r="5" fill="var(--ink)"/>
+ <text x="-32" y="18" fill="var(--ink3)" font-size="12" text-anchor="middle" font-family="system-ui">E</text><text x="32" y="18" fill="var(--ink3)" font-size="12" text-anchor="middle" font-family="system-ui">F</text>
+ <text y="40" fill="#16a34a" font-size="12" font-weight="700" text-anchor="middle" font-family="system-ui">&gt; ½</text></g></svg>`;
+}
+function artPlan(){
+ const hs=ST.households.slice(0,4);const N=hs.length;
+ const xs=hs.map((_,i)=>N===1?160:72+i*(176/(N-1)));
+ const cols=['#ea580c','#0284c7','#16a34a','#7c3aed'];
+ return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-plan) 10%,var(--card))"/>
+ <path d="M8 124 C70 104 110 136 170 112 S270 96 312 108" fill="none" stroke="var(--line)" stroke-width="12" stroke-linecap="round"/>
+ <path d="M8 124 C70 104 110 136 170 112 S270 96 312 108" fill="none" stroke="var(--ink3)" stroke-width="2" stroke-dasharray="8 8"/>
+ ${hs.map((h,i)=>{const x=xs[i],y=116-((i%2)*8);return `<g transform="translate(${x},${y})"><path d="M0 0 C-13 -15 -13 -32 0 -36 C13 -32 13 -15 0 0Z" fill="${cols[i]}"/><circle cy="-24" r="5.5" fill="var(--card)"/><text y="-46" fill="${cols[i]}" font-size="11" font-weight="800" text-anchor="middle" font-family="system-ui">${esc((h.name||'Casa').slice(0,16))} · ${+h.people||0}</text></g>`}).join('')}
+ ${N>1?`<g transform="translate(160,${N===2?118:150})"><path d="M0 -12 L3.5 -3.5 L12 -3.5 L5 1.5 L8 10 L0 5 L-8 10 L-5 1.5 L-12 -3.5 L-3.5 -3.5Z" fill="#eab308"/></g>`:''}
+ <text x="160" y="168" fill="var(--ink2)" font-size="11" text-anchor="middle" font-family="system-ui" font-weight="600">${N>1?'★ punto de encuentro intermedio':'punto de encuentro'}</text></svg>`;
+}
+
+/* ========== GUÍAS (qué hacer) ========== */
+const GUIDES=[
+ {id:'sismo',ic:'quake',k:'--c-guide',t:'Sismo',d:'Agáchate, cúbrete y sujétate',ph:[
+  ['Antes',['Fija a la pared muebles altos, estantes y calentadores.','Identifica en cada cuarto un lugar seguro: bajo una mesa firme o junto a una pared interior.','Ten la mochila y los zapatos cerca de la cama.']],
+  ['Durante',['Agáchate, cúbrete la cabeza y el cuello, y sujétate hasta que pare.','Aléjate de ventanas, espejos y objetos que puedan caer.','No corras a las escaleras ni al ascensor mientras tiembla.','Si estás afuera, aléjate de postes, cables y fachadas. Si vas manejando, detente en un lugar despejado.']],
+  ['Después',['Revisa si hay heridos y presta primeros auxilios.','Si huele a gas, no enciendas nada: cierra la llave y sal.','Si la casa tiene daños serios, sal con la mochila y ve al punto de encuentro.','Espera réplicas. Usa mensajes de texto en vez de llamadas para no saturar la red.','Escucha la radio y sigue las indicaciones oficiales.']]]},
+ {id:'inund',ic:'flood',k:'--c-home',t:'Inundación y lluvias fuertes',d:'Sube a terreno alto, no cruces corrientes',ph:[
+  ['Antes',['Averigua si tu zona se inunda y cuál es la ruta a terreno alto.','Limpia desagües y canaletas antes de la temporada lluviosa.','Guarda documentos y aparatos en lugares altos o en bolsas impermeables.']],
+  ['Durante',['No camines ni manejes por agua en movimiento: unos 15 cm pueden derribarte y unos 30 cm pueden arrastrar un carro.','Si el agua entra a la casa, corta la electricidad desde el breaker si puedes hacerlo seco y seguro.','Sube a un piso o terreno más alto con la mochila. Avisa a tu contacto.']],
+  ['Después',['No regreses hasta que las autoridades lo indiquen.','No uses el agua de la llave hasta saber que es segura: hiérvela o trátala.','Desinfecta lo que tocó el agua de la inundación y revisa la instalación eléctrica antes de usarla.']]]},
+ {id:'fuego',ic:'fire',k:'--c-tel',t:'Incendio',d:'Sal agachado y no regreses',ph:[
+  ['Antes',['Ten un extintor y aprende a usarlo.','En temporada seca, no quemes basura y limpia la maleza alrededor de la casa.','Acuerda dos salidas de cada cuarto y un punto de reunión afuera.']],
+  ['Durante',['Avisa a todos y sal de inmediato. Llama al 911 o al 103 cuando estés afuera.','Si hay humo, sal agachado: el aire más limpio está cerca del piso.','Toca las puertas con el dorso de la mano antes de abrir: si están calientes, usa otra salida.','Si se te prende la ropa: detente, tírate al suelo y rueda.']],
+  ['Después',['No vuelvas a entrar por ningún motivo hasta que los bomberos lo autoricen.','Cuenta a todas las personas en el punto de reunión.']]]},
+ {id:'agua',ic:'drop',k:'--c-home',t:'Corte de agua prolongado',d:'Raciona y trata el agua',ph:[
+  ['Al anunciarse',['Llena tanques, recipientes y la bañera.','Separa el agua para tomar del agua para aseo.']],
+  ['Durante',['Calcula 4 litros por persona al día solo para tomar y cocinar.','Usa agua ya usada (de lavar) para descargar el inodoro con un balde.','Lava platos en un recipiente, no con el chorro.']],
+  ['Si tienes que tratar agua',['Hervir: 1 minuto en ebullición fuerte.','Cloro sin aroma: 2 gotas por litro (8 por galón), mezclar y esperar 30 minutos. Si está turbia, primero déjala asentar y cuélala, y usa el doble.','Guarda el agua tratada en recipientes limpios y tapados.']]]},
+ {id:'luz',ic:'bolt',k:'--c-guide',t:'Apagón prolongado',d:'Cuida la comida y evita riesgos',ph:[
+  ['Durante',['Desconecta aparatos delicados para protegerlos del regreso de la corriente.','Abre la refrigeradora lo menos posible: la comida aguanta unas 4 horas, y un congelador lleno cerca de 2 días.','Usa linternas en vez de velas. Si usas velas, nunca las dejes solas ni cerca de cortinas.','Un generador o una estufa de carbón siempre afuera, nunca dentro de la casa ni del garaje.']],
+  ['Comunicación',['Ahorra batería del celular: modo ahorro y brillo bajo.','Carga los power banks cuando vuelva la luz.','Escucha la radio para noticias.']]]},
+ {id:'vias',ic:'road',k:'--c-car',t:'Cierre de vías o escasez',d:'Quédate en casa con tu reserva',ph:[
+  ['Durante',['Evita viajes innecesarios: usa tu despensa.','Mantén el tanque del carro por encima de la mitad.','No intentes reunir a la familia a la fuerza si las vías están cerradas: cada casa aguanta con su reserva.','Comunícate a los horarios fijos acordados en el plan.']],
+  ['Al terminar',['Repón lo que usaste de la despensa.','Revisa qué faltó y agrégalo a la lista.']]]},
+ {id:'evac',ic:'run',k:'--c-bag',t:'Evacuar la casa',d:'Mochila, cerrar y avisar',ph:[
+  ['Antes de salir',['Toma la mochila de cada persona, documentos, medicinas y mascotas.','Cierra la llave del gas y del agua, y baja el breaker si hay tiempo.','Deja una nota visible indicando a dónde vas.']],
+  ['En el camino',['Sigue las rutas acordadas o las que indiquen las autoridades.','Avisa al contacto de fuera cuando salgas y cuando llegues.','Si te separas del grupo, ve al punto de encuentro.']]]}
+];
+const PHASE_COL={'Antes':'--c-plan','Durante':'--c-tel','Después':'--c-home'};
+
+/* ========== ROUTER ========== */
+let VIEW={name:'home'};
+function go(v,replace){VIEW=v;try{replace?history.replaceState(v,''):history.pushState(v,'')}catch(e){}render();window.scrollTo(0,0)}
+window.addEventListener('popstate',e=>{document.querySelectorAll('.modal').forEach(m=>m.remove());VIEW=e.state||{name:'home'};render()});
+
+function header(title,sub,back){
+ return `<header class="top">${back?`<button class="iconbtn" data-back aria-label="Atrás">${svg('back')}</button>`:`<div class="logo">${svg('shield')}</div>`}
+ <div class="brand"><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div>
+ ${back?'':`<button class="iconbtn" data-go="settings" aria-label="Ajustes">${svg('gear')}</button>`}</header>`;
+}
+function render(){
+ applyTheme();
+ const app=$('#app');
+ if(!ST.setup&&VIEW.name!=='settings'){app.innerHTML=vWizard();$('#navwrap').classList.add('hidden');bind();return}
+ $('#navwrap').classList.remove('hidden');
+ const V={home:vHome,kit:vKit,plan:vPlan,guides:vGuides,guide:vGuide,contacts:vContacts,settings:vSettings};
+ app.innerHTML=(V[VIEW.name]||vHome)(VIEW);
+ renderNav();bind();
+}
+function renderNav(){
+ const map={home:'home',kit:'kit',plan:'plan',guides:'guides',guide:'guides',contacts:'contacts',settings:'home'};
+ const cur=map[VIEW.name];
+ $('#nav').innerHTML=[['home','home','Inicio'],['kit','bag','Kit'],['plan','plan','Plan'],['guides','guide','Guías'],['contacts','phone','Contactos']]
+  .map(([v,ic,l])=>`<button data-tab="${v}" class="${cur===v?'on':''}">${svg(ic)}<span>${l}</span></button>`).join('');
+}
+
+/* ========== VISTAS ========== */
+function vWizard(){
+ const hs=ST.households.length?ST.households:[{id:uid(),name:'Mi casa',people:2,babies:0,elderly:0,pets:0,car:false}];
+ if(!ST.households.length)ST.households=hs;
+ let h=`<header class="top"><div class="logo">${svg('shield')}</div><div class="brand"><h1>Plan Familiar de Emergencia</h1><p>Configuración inicial · 1 minuto</p></div></header><main>`;
+ h+=`<div class="card"><p style="margin:0 0 4px;font-size:15.5px;line-height:1.5">Prepara a tu familia para emergencias: mochilas de 72 horas, reservas para cada casa, un plan de comunicación y guías de qué hacer. <b>Todo se guarda solo en este teléfono</b> y funciona sin internet.</p></div>`;
+ h+=`<div class="wiz-step" style="margin:18px 2px 8px">1 · Tu familia</div><label class="f"><span>Nombre de la familia</span><input class="in" data-st="family" value="${esc(ST.family)}" placeholder="Ej.: Familia Pérez"></label>`;
+ h+=`<div class="wiz-step" style="margin:18px 2px 8px">2 · Casas</div><p class="small muted" style="margin:0 0 10px">Si la familia vive en más de una casa, agrégalas: cada una tendrá su propia lista y podrán servir de refugio entre sí.</p>`;
+ h+=hhEditor();
+ h+=`<div class="wiz-step" style="margin:18px 2px 8px">3 · Reserva en casa</div><label class="f"><span>¿Para cuántos días?</span><select class="in" data-st="days">${[3,7,14].map(d=>`<option value="${d}" ${ST.days===d?'selected':''}>${d} días${d===3?' (mínimo recomendado)':d===14?' (recomendado)':''}</option>`).join('')}</select></label>`;
+ h+=`<button class="btn pri" style="width:100%;padding:15px;font-size:16px;margin-top:8px" id="wizDone">Crear mi plan</button>`;
+ h+=`<p class="foot">Guía orientativa. No sustituye las indicaciones de las autoridades ni de los servicios de emergencia.</p></main>`;
+ return h;
+}
+function hhEditor(){
+ return ST.households.map((hh,i)=>`<div class="hh" data-hh="${hh.id}">
+  <h4><input class="in" data-hf="name" value="${esc(hh.name)}" placeholder="Nombre de la casa (ej.: Casa Penonomé)" style="font-weight:700">${ST.households.length>1?`<button class="iconbtn" data-hdel="${hh.id}" aria-label="Quitar casa" style="width:38px;height:38px">${svg('trash')}</button>`:''}</h4>
+  <div class="row2">${[['people','Personas',1],['babies','Bebés (0-2)',0],['elderly','Adultos mayores',0],['pets','Mascotas',0]].map(([k,l,min])=>`<label class="f" style="margin:0"><span>${l}</span><div class="stepper"><button data-hstep="${k}" data-d="-1" data-min="${min}">−</button><b>${+hh[k]||0}</b><button data-hstep="${k}" data-d="1" data-min="${min}">+</button></div></label>`).join('')}</div>
+  <label class="switch" style="margin-top:8px"><span class="small" style="font-weight:600">Esta casa tiene carro</span><input type="checkbox" data-hf="car" ${hh.car?'checked':''}></label>
+ </div>`).join('')+`<button class="btn" id="hhAdd" style="width:100%">${svg('plus','style="width:16px;height:16px;vertical-align:-3px"')} Agregar otra casa</button>`;
+}
+function vHome(){
+ const p=totalProg(),a=alerts(),C=2*Math.PI*42;
+ let h=header('Plan Familiar de Emergencia',ST.family||'Mi familia');
+ h+='<main>';
+ h+=`<div class="card"><div class="hero"><div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="color-mix(in srgb,var(--ink) 9%,transparent)" stroke-width="10"/><circle cx="50" cy="50" r="42" fill="none" stroke="var(--ok)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*p.p/100} ${C}"/></svg><b>${p.p}%</b></div>
+ <div style="flex:1;min-width:0"><b style="font-size:16.5px">Preparación de la familia</b><div class="small muted" style="margin:2px 0 8px">${p.d} de ${p.n} elementos listos · ${totalPeople()} persona${totalPeople()===1?'':'s'} en ${ST.households.length} casa${ST.households.length===1?'':'s'}</div><div class="alerts">`;
+ if(a.expired)h+=`<div class="alert bad">${svg('warn')} ${a.expired} vencido${a.expired===1?'':'s'}</div>`;
+ if(a.soon)h+=`<div class="alert warn">${svg('clock')} ${a.soon} por vencer en 30 días</div>`;
+ if(a.reviewDue)h+=`<div class="alert warn">${svg('clock')} ${a.since===null?'Primera revisión pendiente':'Toca revisar (cada 6 meses)'}</div>`;
+ if(!a.expired&&!a.soon&&!a.reviewDue)h+=`<div class="alert ok">${svg('ok')} Todo al día</div>`;
+ h+=`</div></div></div></div>`;
+ h+=`<div class="quick"><a class="qbtn call" href="tel:911" style="text-decoration:none">${svg('phone')} Llamar 911</a><button class="qbtn" id="shareBtn">${svg('share')} Compartir plan</button></div>`;
+ h+=`<div class="sect">Tu kit</div><div class="tiles">`;
+ sections().forEach(s=>{const q=prog(s.items);h+=`<button class="tile" style="--k:var(${s.k})" data-gokit="${s.id}"><div class="ic">${svg(s.ic)}</div><b>${esc(s.name)}</b><small>${q.d}/${q.n} listos</small><div class="bar"><i style="width:${q.p}%"></i></div></button>`});
+ const pp=prog(planItems());
+ h+=`<button class="tile" style="--k:var(--c-plan)" data-go="plan"><div class="ic">${svg('plan')}</div><b>Plan familiar</b><small>${pp.d}/${pp.n} listos</small><div class="bar"><i style="width:${pp.p}%"></i></div></button>`;
+ h+=`</div><div class="sect">¿Qué hacer si…?</div>`;
+ GUIDES.slice(0,4).forEach(g=>h+=guideCard(g));
+ h+=`<button class="btn" data-go="guides" style="width:100%">Ver todas las guías</button>`;
+ h+=`<div class="card" style="margin-top:16px"><b>Revisión</b><p class="small muted" style="margin:4px 0 10px">${a.since===null?'Aún no has registrado una revisión.':`Última revisión hace ${a.since} día${a.since===1?'':'s'}.`} Revisa agua, comida, pilas y medicinas cada 6 meses.</p><button class="btn ${a.reviewDue?'pri':''}" id="reviewBtn">Marcar revisado hoy</button></div>`;
+ h+=`<p class="foot">Guía orientativa. No sustituye las indicaciones de las autoridades ni de los servicios de emergencia.<br>PanaMentorLabs</p></main>`;
+ return h;
+}
+function guideCard(g){return `<button class="gcard" style="--k:var(${g.k})" data-guide="${g.id}"><div class="ic">${svg(g.ic)}</div><div><b>${esc(g.t)}</b><small>${esc(g.d)}</small></div></button>`}
+function vKit(v){
+ const secs=sections();const s=secs.find(x=>x.id===v.tab)||secs[0];
+ let h=header('Kit de emergencia',ST.family||'');
+ h+=`<main><div class="tabs">${secs.map(x=>`<button data-tab2="${x.id}" class="${x.id===s.id?'on':''}" style="--k:var(${x.k})">${svg(x.ic)}${esc(x.name)}<em>${prog(x.items).p}%</em></button>`).join('')}</div>`;
+ h+=`<div class="art">${s.id==='bag'?artBag(totalPeople()):s.id==='car'?artCar():artHouse(s.hh)}</div>`;
+ const note=s.id==='bag'?`Una mochila por persona (${totalPeople()} en total), lista y cerca de la puerta. Es lo que agarras si hay que salir.`:
+  s.id==='car'?'Kit fijo en el carro. Mantén el tanque siempre por encima de la mitad.':
+  `Reserva para ${ST.days} días en casa. Compra lo que la familia ya come y ve rotándolo para que no se venza.${totalPeople()-(+s.hh.people||0)>0?' Esta casa también puede servir de refugio a las demás.':''}`;
+ const q=prog(s.items);
+ h+=`<p class="note">${note}</p><div class="bar" style="height:9px"><i style="width:${q.p}%"></i></div><p class="count">${q.d} de ${q.n} listos</p>`;
+ h+=s.items.map(itemRow).join('');
+ h+='</main>';return h;
+}
+function itemRow(it){
+ const on=!!ST.done[it.id],iso=ST.exp[it.id];
+ return `<div class="item ${on?'on':''}"><button class="chk" data-chk="${it.id}" aria-pressed="${on}" aria-label="Marcar">${on?svg('check'):''}</button>
+ <div class="tx"><span>${esc(it.t)}${it.q?` · <span class="qty">${esc(it.q)}</span>`:''}</span>${it.e?`<div><label class="exp">${iso?expTag(iso):'<span class="xp">+ fecha de vencimiento</span>'}<input type="date" data-exp="${it.id}" value="${iso||''}" aria-label="Fecha de vencimiento"></label></div>`:''}</div></div>`;
+}
+const PLAN_FIELDS=[
+ ['meet1','Punto de encuentro cerca de casa','Ej.: el parque o la escuela del barrio'],
+ ['meet2','Punto de encuentro fuera del barrio',''],
+ ['meetMid','Punto intermedio entre las casas','Un lugar en el camino entre ellas'],
+ ['outContact','Contacto fuera de la región (nombre y teléfono)','Todos le avisan a esta persona'],
+ ['routes','Rutas de salida (al menos dos)',''],
+ ['hours','Horario fijo para comunicarse','Ej.: 7:00 a. m. y 7:00 p. m.'],
+ ['dest','Destino si hay que salir de casa','Ej.: la casa de otro familiar'],
+ ['pickup','Quién recoge a quién (escuela, trabajo)','']];
+function vPlan(){
+ const pp=prog(planItems());
+ let h=header('Plan familiar',ST.family||'');
+ h+=`<main><div class="art">${artPlan()}</div><p class="note">Lo que más falla en una emergencia es la coordinación. Llena estos datos y compártelos con toda la familia.</p>`;
+ h+=`<div class="btns" style="margin-bottom:6px"><button class="btn pri" id="shareBtn">${svg('share','style="width:17px;height:17px;vertical-align:-3px"')} Compartir</button><button class="btn" id="printBtn">${svg('print','style="width:17px;height:17px;vertical-align:-3px"')} Imprimir</button></div>`;
+ h+=`<div class="sect">Puntos y comunicación</div>`;
+ h+=PLAN_FIELDS.map(([k,l,ph])=>`<label class="f"><span>${l}</span><input class="in" data-plan="${k}" value="${esc(ST.plan[k]||'')}" placeholder="${esc(ph)}"></label>`).join('');
+ h+=`<div class="sect" style="display:flex;justify-content:space-between;align-items:center">Personas<button class="btn sm" id="personAdd">${svg('plus','style="width:15px;height:15px;vertical-align:-3px"')} Agregar</button></div>`;
+ if(!ST.persons.length)h+=`<p class="small muted" style="margin:0 2px 8px">Agrega a cada persona con su teléfono y lo que hay que saber de ella (medicinas, alergias, necesidades).</p>`;
+ h+=ST.persons.map(p=>{const hh=ST.households.find(x=>x.id===p.hh);return `<button class="person" data-person="${p.id}"><div class="av">${esc((p.name||'?').trim().charAt(0).toUpperCase())}</div><div class="tx"><b>${esc(p.name||'Sin nombre')}</b><small>${esc([hh?hh.name:'',p.phone].filter(Boolean).join(' · '))}${p.needs?' · '+esc(p.needs.slice(0,40)):''}</small></div></button>`}).join('');
+ h+=`<div class="sect">Lista del plan</div><div class="bar" style="height:9px"><i style="width:${pp.p}%"></i></div><p class="count">${pp.d} de ${pp.n} listos</p>`;
+ h+=planItems().map(itemRow).join('');
+ return h+'</main>';
+}
+function vGuides(){
+ let h=header('¿Qué hacer si…?','Guías rápidas por escenario');
+ h+='<main>'+GUIDES.map(guideCard).join('')+`<p class="foot">Recomendaciones generales de preparación. Ante una emergencia, sigue siempre las indicaciones de las autoridades.</p></main>`;
+ return h;
+}
+function vGuide(v){
+ const g=GUIDES.find(x=>x.id===v.id)||GUIDES[0];
+ let h=header(g.t,g.d,true)+'<main>';
+ g.ph.forEach(([name,steps])=>{h+=`<div class="card phase" style="--k:var(${PHASE_COL[name]||g.k})"><h3>${esc(name)}</h3><ol>${steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>`});
+ h+=`<a class="qbtn call" href="tel:911" style="text-decoration:none;justify-content:center">${svg('phone')} Llamar 911</a></main>`;
+ return h;
+}
+const OFFICIAL=[['911','Emergencias','Número único de emergencias'],['103','Bomberos y ambulancia',''],['104','Policía','']];
+function vContacts(){
+ let h=header('Contactos','Toca para llamar')+'<main>';
+ h+=`<div class="sect">Emergencias en Panamá</div>`;
+ h+=OFFICIAL.map(([n,t,s])=>telRow(n,t,s,n)).join('');
+ if(ST.plan.outContact)h+=`<div class="sect">Contacto fuera de la región</div><div class="card small" style="font-size:15px">${esc(ST.plan.outContact)}</div>`;
+ h+=`<div class="sect" style="display:flex;justify-content:space-between;align-items:center">Mis contactos<button class="btn sm" id="contactAdd">${svg('plus','style="width:15px;height:15px;vertical-align:-3px"')} Agregar</button></div>`;
+ if(!ST.contacts.length&&!ST.persons.some(p=>p.phone))h+=`<p class="small muted" style="margin:0 2px">Agrega médico, vecinos, escuela, trabajo o compañía de seguros.</p>`;
+ h+=ST.contacts.map(c=>`<div style="position:relative">${telRow(c.phone,c.name,c.rel,c.phone)}<button class="iconbtn" data-cedit="${c.id}" aria-label="Editar" style="position:absolute;right:62px;top:12px;width:36px;height:36px">${svg('edit')}</button></div>`).join('');
+ const fam=ST.persons.filter(p=>p.phone);
+ if(fam.length){h+=`<div class="sect">Familia</div>`+fam.map(p=>{const hh=ST.households.find(x=>x.id===p.hh);return telRow('',p.name,hh?hh.name:'',p.phone)}).join('')}
+ h+=`<p class="foot">Verifica los números de tu localidad y guárdalos también en papel.</p></main>`;
+ return h;
+}
+function telRow(num,title,sub,dial){
+ const d=String(dial||'').replace(/[^\d+]/g,'');
+ return `<a class="tel" ${d?`href="tel:${d}"`:''}>${num?`<span class="num">${esc(num)}</span>`:`<span class="av" style="width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--pri-soft);color:var(--pri);font-weight:800;flex:none">${esc((title||'?').charAt(0).toUpperCase())}</span>`}<span class="tx"><b>${esc(title)}</b>${sub||(!num&&dial)?`<small>${esc(sub||'')}${!num&&dial?(sub?' · ':'')+esc(dial):''}</small>`:''}</span>${d?`<span class="call">${svg('phone')}</span>`:''}</a>`;
+}
+function vSettings(){
+ let h=header('Ajustes','',true)+'<main>';
+ h+=`<div class="sect">Familia</div><label class="f"><span>Nombre de la familia</span><input class="in" data-st="family" value="${esc(ST.family)}" placeholder="Ej.: Familia Pérez"></label>`;
+ h+=`<label class="f"><span>Reserva en casa</span><select class="in" data-st="days">${[3,7,14].map(d=>`<option value="${d}" ${ST.days===d?'selected':''}>${d} días</option>`).join('')}</select></label>`;
+ h+=`<div class="sect">Casas</div>`+hhEditor();
+ h+=`<div class="sect">Apariencia</div><select class="in" data-st="theme">${[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(([v,l])=>`<option value="${v}" ${ST.theme===v?'selected':''}>${l}</option>`).join('')}</select>`;
+ h+=`<div class="sect">Respaldo</div><p class="small muted" style="margin:0 0 10px">Tus datos viven solo en este teléfono. Exporta un respaldo de vez en cuando o para pasarlo a otro teléfono.</p>
+ <div class="btns"><button class="btn pri" id="expBtn">${svg('download','style="width:16px;height:16px;vertical-align:-3px"')} Exportar</button><button class="btn" id="impBtn">${svg('upload','style="width:16px;height:16px;vertical-align:-3px"')} Importar</button><button class="btn" id="printBtn">${svg('print','style="width:16px;height:16px;vertical-align:-3px"')} Imprimir todo</button></div>`;
+ h+=`<div class="sect">App</div><div class="btns"><button class="btn" id="updBtn">${svg('refresh','style="width:16px;height:16px;vertical-align:-3px"')} Buscar actualización</button><button class="btn dan" id="wipeBtn">Borrar todos los datos</button></div>`;
+ h+=`<p class="foot">Plan Familiar de Emergencia · PanaMentorLabs<br>Guía orientativa: no sustituye las indicaciones de las autoridades.</p></main>`;
+ return h;
+}
+
+/* ========== MODALES ========== */
+function modal(html,onMount){
+ const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sh">${html}</div>`;document.body.appendChild(m);
+ m.addEventListener('click',e=>{if(e.target===m)m.remove()});onMount&&onMount(m,()=>m.remove());
+}
+function personEditor(p){
+ const isNew=!p;p=p||{id:uid(),name:'',hh:ST.households[0]?.id,phone:'',needs:''};
+ modal(`<h3>${isNew?'Agregar persona':'Editar persona'}</h3>
+ <label class="f"><span>Nombre</span><input class="in" id="pN" value="${esc(p.name)}"></label>
+ <label class="f"><span>Casa</span><select class="in" id="pH">${ST.households.map(h=>`<option value="${h.id}" ${h.id===p.hh?'selected':''}>${esc(h.name||'Casa')}</option>`).join('')}</select></label>
+ <label class="f"><span>Teléfono</span><input class="in" id="pP" type="tel" value="${esc(p.phone)}" placeholder="6000-0000"></label>
+ <label class="f"><span>Medicinas, alergias o necesidades</span><textarea class="in" id="pX" placeholder="Ej.: insulina diaria, alérgico a la penicilina">${esc(p.needs)}</textarea></label>
+ <div class="btns"><button class="btn pri" id="pS">Guardar</button><button class="btn" id="pC">Cancelar</button>${isNew?'':'<button class="btn dan" id="pD">Eliminar</button>'}</div>`,(m,close)=>{
+  m.querySelector('#pC').onclick=close;
+  m.querySelector('#pS').onclick=()=>{p.name=m.querySelector('#pN').value.trim();p.hh=m.querySelector('#pH').value;p.phone=m.querySelector('#pP').value.trim();p.needs=m.querySelector('#pX').value.trim();if(isNew)ST.persons.push(p);save();close();render()};
+  const d=m.querySelector('#pD');if(d)d.onclick=()=>{if(confirm('¿Eliminar a esta persona?')){ST.persons=ST.persons.filter(x=>x.id!==p.id);save();close();render()}};
+  if(isNew)setTimeout(()=>m.querySelector('#pN').focus(),60);
+ });
+}
+function contactEditor(c){
+ const isNew=!c;c=c||{id:uid(),name:'',phone:'',rel:''};
+ modal(`<h3>${isNew?'Agregar contacto':'Editar contacto'}</h3>
+ <label class="f"><span>Nombre</span><input class="in" id="cN" value="${esc(c.name)}" placeholder="Ej.: Dr. Gómez"></label>
+ <label class="f"><span>Teléfono</span><input class="in" id="cP" type="tel" value="${esc(c.phone)}"></label>
+ <label class="f"><span>Qué es</span><input class="in" id="cR" value="${esc(c.rel)}" placeholder="Ej.: médico, vecino, escuela"></label>
+ <div class="btns"><button class="btn pri" id="cS">Guardar</button><button class="btn" id="cC">Cancelar</button>${isNew?'':'<button class="btn dan" id="cD">Eliminar</button>'}</div>`,(m,close)=>{
+  m.querySelector('#cC').onclick=close;
+  m.querySelector('#cS').onclick=()=>{c.name=m.querySelector('#cN').value.trim();c.phone=m.querySelector('#cP').value.trim();c.rel=m.querySelector('#cR').value.trim();if(!c.name&&!c.phone){close();return}if(isNew)ST.contacts.push(c);save();close();render()};
+  const d=m.querySelector('#cD');if(d)d.onclick=()=>{ST.contacts=ST.contacts.filter(x=>x.id!==c.id);save();close();render()};
+  if(isNew)setTimeout(()=>m.querySelector('#cN').focus(),60);
+ });
+}
+
+/* ========== COMPARTIR / IMPRIMIR / RESPALDO ========== */
+function planText(){
+ const P=ST.plan;const L=[];
+ L.push(`🛡️ PLAN DE EMERGENCIA — ${ST.family||'Mi familia'}`);
+ L.push('');
+ PLAN_FIELDS.forEach(([k,l])=>{if(P[k])L.push(`• ${l}: ${P[k]}`)});
+ if(ST.households.length){L.push('');L.push('🏠 Casas:');ST.households.forEach(h=>L.push(`• ${h.name||'Casa'}: ${+h.people||0} persona(s)`))}
+ if(ST.persons.length){L.push('');L.push('👥 Personas:');ST.persons.forEach(p=>{const hh=ST.households.find(x=>x.id===p.hh);L.push(`• ${p.name}${hh?' ('+hh.name+')':''}${p.phone?' — '+p.phone:''}${p.needs?' — '+p.needs:''}`)})}
+ L.push('');L.push('☎️ Emergencias: 911 · Bomberos y ambulancia 103 · Policía 104');
+ return L.join('\n');
+}
+async function sharePlan(){
+ const txt=planText();
+ try{if(navigator.share){await navigator.share({title:'Plan de emergencia',text:txt});return}}catch(e){if(e&&e.name==='AbortError')return}
+ window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+function printAll(){
+ const P=ST.plan;const tbl=(rows,head)=>`<table>${head?`<tr>${head.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>`:''}${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+ let h=`<h1>Plan de emergencia — ${esc(ST.family||'Mi familia')}</h1><div>Actualizado: ${new Date().toLocaleDateString('es-PA')}</div>`;
+ h+=`<h2>Plan de comunicación</h2>`+tbl(PLAN_FIELDS.map(([k,l])=>[esc(l),esc(P[k]||'')]));
+ h+=`<h2>Personas</h2>`+tbl(ST.persons.map(p=>{const hh=ST.households.find(x=>x.id===p.hh);return[esc(p.name),esc(hh?hh.name:''),esc(p.phone),esc(p.needs)]}),['Nombre','Casa','Teléfono','Medicinas / necesidades']);
+ h+=`<h2>Teléfonos</h2>`+tbl(OFFICIAL.map(([n,t])=>[esc(t),n]).concat(ST.contacts.map(c=>[esc(c.name+(c.rel?' ('+c.rel+')':'')),esc(c.phone)])),['Contacto','Número']);
+ sections().forEach(s=>{h+=`<h2 class="pb">${esc(s.name)}</h2>`+tbl(s.items.map(it=>[`<span class="box"></span>`,esc(it.t)+(it.q?' — <b>'+esc(it.q)+'</b>':''),it.e?esc(ST.exp[it.id]||''):'']),['✓','Elemento','Vence'])});
+ $('#print').innerHTML=h;setTimeout(()=>window.print(),50);
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify({app:'plan-familiar-emergencia',date:new Date().toISOString(),data:ST},null,1)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='plan-emergencia-'+todayISO()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+}
+function importData(){
+ const f=$('#fpick');f.value='';f.onchange=async()=>{try{const j=JSON.parse(await f.files[0].text());const d=j.data||j;if(!d||!Array.isArray(d.households))throw 0;if(!confirm('Esto reemplaza los datos actuales. ¿Continuar?'))return;ST=Object.assign(DEF(),d);save();go({name:'home'},true);toast('Respaldo importado')}catch(e){toast('El archivo no es un respaldo válido')}};f.click();
+}
+async function checkUpdate(){
+ try{if('caches' in window){for(const k of await caches.keys())await caches.delete(k)}if(navigator.serviceWorker){for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister()}}catch(e){}
+ location.reload();
+}
+
+/* ========== EVENTOS ========== */
+function bind(){
+ const app=$('#app');
+ app.onclick=e=>{
+  const el=e.target.closest('button,[data-go],[data-gokit]');if(!el)return;const d=el.dataset;
+  if('back' in d){history.length>1?history.back():go({name:'home'},true);return}
+  if(d.go){go({name:d.go});return}
+  if(d.gokit){go({name:'kit',tab:d.gokit});return}
+  if(d.tab2){go({name:'kit',tab:d.tab2},true);return}
+  if(d.guide){go({name:'guide',id:d.guide});return}
+  if(d.chk){ST.done[d.chk]?delete ST.done[d.chk]:ST.done[d.chk]=true;save();keepScroll(render);return}
+  if(d.person){personEditor(ST.persons.find(p=>p.id===d.person));return}
+  if(d.cedit){e.preventDefault();contactEditor(ST.contacts.find(c=>c.id===d.cedit));return}
+  if(d.hstep){const hh=ST.households.find(x=>x.id===el.closest('[data-hh]').dataset.hh);hh[d.hstep]=Math.max(+d.min,(+hh[d.hstep]||0)+(+d.d));save();keepScroll(render);return}
+  if(d.hdel){if(confirm('¿Quitar esta casa? Se pierden sus marcas.')){ST.households=ST.households.filter(x=>x.id!==d.hdel);ST.persons.forEach(p=>{if(p.hh===d.hdel)p.hh=ST.households[0]?.id});save();keepScroll(render)}return}
+  switch(el.id){
+   case 'hhAdd':ST.households.push({id:uid(),name:`Casa ${ST.households.length+1}`,people:1,babies:0,elderly:0,pets:0,car:false});save();keepScroll(render);return;
+   case 'wizDone':ST.setup=true;ST.households.forEach((h,i)=>{if(!h.name.trim())h.name=`Casa ${i+1}`});save();go({name:'home'},true);return;
+   case 'shareBtn':sharePlan();return;
+   case 'printBtn':printAll();return;
+   case 'reviewBtn':ST.review=todayISO();save();toast('Revisión registrada');render();return;
+   case 'personAdd':personEditor();return;
+   case 'contactAdd':contactEditor();return;
+   case 'expBtn':exportData();return;
+   case 'impBtn':importData();return;
+   case 'updBtn':checkUpdate();return;
+   case 'wipeBtn':if(confirm('¿Borrar todos los datos del plan en este teléfono?')&&confirm('Esta acción no se puede deshacer. ¿Seguro?')){ST=DEF();save();go({name:'home'},true)}return;
+  }
+ };
+ app.querySelectorAll('[data-st]').forEach(el=>{el.onchange=el.oninput=()=>{const k=el.dataset.st;ST[k]=k==='days'?+el.value:el.value;save();if(k==='theme'||k==='days')keepScroll(render)}});
+ app.querySelectorAll('[data-hf]').forEach(el=>{const hh=()=>ST.households.find(x=>x.id===el.closest('[data-hh]').dataset.hh);
+  if(el.type==='checkbox')el.onchange=()=>{hh().car=el.checked;save()};else el.oninput=()=>{hh().name=el.value;save()}});
+ app.querySelectorAll('[data-plan]').forEach(el=>{el.oninput=()=>{const v=el.value;v.trim()?ST.plan[el.dataset.plan]=v:delete ST.plan[el.dataset.plan];save()}});
+ app.querySelectorAll('[data-exp]').forEach(el=>{el.onchange=()=>{el.value?ST.exp[el.dataset.exp]=el.value:delete ST.exp[el.dataset.exp];save();keepScroll(render)}});
+}
+function keepScroll(fn){const y=window.scrollY;fn();window.scrollTo(0,y)}
+$('#nav').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;const t=b.dataset.tab;if(VIEW.name===t)return;go({name:t})};
+
+/* ========== INICIO ========== */
+load();
+try{history.replaceState({name:'home'},'')}catch(e){}
+render();
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
