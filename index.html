@@ -8,7 +8,7 @@
 <title>Plan Familiar de Emergencia</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{
   --bg:#0a1220;--bg2:#0e1a2e;--card:#12213a;--card2:#172a48;--line:#22395e;--ink:#e6eefb;--ink2:#a9bad6;--ink3:#7086a8;
@@ -34,7 +34,7 @@ header.top{position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg)
 header.top .brand{flex:1;min-width:0}
 header.top h1{margin:0;font-size:clamp(15.5px,4.4vw,19px);font-weight:900;letter-spacing:.01em;color:var(--pri);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header.top p{margin:2px 0 0;font-size:12.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:grid;place-items:center;flex:none}
+.logo{width:42px;height:42px;border-radius:12px;flex:none;display:block;box-shadow:0 2px 10px #0006}
 .logo svg{width:24px;height:24px;color:#fff}
 .iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none}
 .iconbtn svg{width:21px;height:21px}
@@ -381,7 +381,7 @@ function go(v,replace){VIEW=v;try{replace?history.replaceState(v,''):history.pus
 window.addEventListener('popstate',e=>{document.querySelectorAll('.modal').forEach(m=>m.remove());VIEW=e.state||{name:'home'};render()});
 
 function header(title,sub,back){
- return `<header class="top">${back?`<button class="iconbtn" data-back aria-label="Atrás">${svg('back')}</button>`:`<div class="logo">${svg('shield')}</div>`}
+ return `<header class="top">${back?`<button class="iconbtn" data-back aria-label="Atrás">${svg('back')}</button>`:`<img class="logo" src="icon-192.png" alt="">`}
  <div class="brand"><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div>
  ${back?'':`<button class="iconbtn" data-go="settings" aria-label="Ajustes">${svg('gear')}</button>`}</header>`;
 }
@@ -405,7 +405,7 @@ function renderNav(){
 function vWizard(){
  const hs=ST.households.length?ST.households:[{id:uid(),name:'Mi casa',people:2,babies:0,elderly:0,pets:0,car:false}];
  if(!ST.households.length)ST.households=hs;
- let h=`<header class="top"><div class="logo">${svg('shield')}</div><div class="brand"><h1>Plan Familiar de Emergencia</h1><p>Configuración inicial · 1 minuto</p></div></header><main>`;
+ let h=`<header class="top"><img class="logo" src="icon-192.png" alt=""><div class="brand"><h1>Plan Familiar de Emergencia</h1><p>Configuración inicial · 1 minuto</p></div></header><main>`;
  h+=`<div class="card"><p style="margin:0 0 4px;font-size:15.5px;line-height:1.5">Prepara a tu familia para emergencias: mochilas de 72 horas, reservas para cada casa, un plan de comunicación y guías de qué hacer. <b>Todo se guarda solo en este teléfono</b> y funciona sin internet.</p></div>`;
  h+=`<div class="wiz-step" style="margin:18px 2px 8px">1 · Tu familia</div><label class="f"><span>Nombre de la familia</span><input class="in" data-st="family" value="${esc(ST.family)}" placeholder="Ej.: Familia Pérez"></label>`;
  h+=`<div class="wiz-step" style="margin:18px 2px 8px">2 · Casas</div><p class="small muted" style="margin:0 0 10px">Si la familia vive en más de una casa, agrégalas: cada una tendrá su propia lista y podrán servir de refugio entre sí.</p>`;
