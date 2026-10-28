@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#b91c1c">
+<meta name="theme-color" content="#0a1220">
 <meta name="description" content="Plan familiar de emergencia: mochilas de 72 horas, reservas por casa, plan de comunicación y guías de qué hacer. Funciona sin conexión.">
 <title>Plan Familiar de Emergencia</title>
 <link rel="manifest" href="manifest.json">
@@ -11,40 +11,40 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
-  --bg:#f7f4ef;--bg2:#fffdfa;--card:#ffffff;--line:#e7e0d6;--ink:#1f1a17;--ink2:#5b524a;--ink3:#8a8076;
-  --pri:#b91c1c;--pri2:#dc2626;--pri-soft:#fde8e6;--ok:#15803d;--ok-soft:#e3f4e8;--warn:#b45309;--warn-soft:#fdf0dc;--bad:#b91c1c;
-  --c-bag:#c2410c;--c-home:#0369a1;--c-car:#6d28d9;--c-plan:#15803d;--c-guide:#b45309;--c-tel:#b91c1c;
-  --btn:#b91c1c;--r:16px;--safe-b:env(safe-area-inset-bottom,0px);--shadow:0 1px 2px #0000000d,0 4px 14px #00000008;
+  --bg:#0a1220;--bg2:#0e1a2e;--card:#12213a;--card2:#172a48;--line:#22395e;--ink:#e6eefb;--ink2:#a9bad6;--ink3:#7086a8;
+  --pri:#60a5fa;--pri2:#3b82f6;--pri-soft:#3a1420;--btn:#3b82f6;--btn-ink:#ffffff;--sos:#dc2626;
+  --ok:#4ade80;--ok-soft:#10301f;--warn:#fbbf24;--warn-soft:#33270b;--bad:#f87171;
+  --c-bag:#fb923c;--c-home:#38bdf8;--c-car:#a78bfa;--c-plan:#4ade80;--c-guide:#fbbf24;--c-tel:#f87171;
+  --r:16px;--safe-b:env(safe-area-inset-bottom,0px);--shadow:none;--glow:radial-gradient(ellipse at top,#16305a 0%,#0a1220 58%);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141110;--bg2:#1b1715;--card:#211c19;--line:#352d28;--ink:#f3ede7;--ink2:#c3b8ad;--ink3:#8f847a;
-  --pri:#f87171;--pri2:#ef4444;--pri-soft:#3b1717;--ok:#4ade80;--ok-soft:#14301d;--warn:#fbbf24;--warn-soft:#3a2a0c;--bad:#f87171;
-  --c-bag:#fb923c;--c-home:#38bdf8;--c-car:#a78bfa;--c-plan:#4ade80;--c-guide:#fbbf24;--c-tel:#f87171;--shadow:none;--btn:#b91c1c}}
-:root[data-theme="dark"]{
-  --bg:#141110;--bg2:#1b1715;--card:#211c19;--line:#352d28;--ink:#f3ede7;--ink2:#c3b8ad;--ink3:#8f847a;
-  --pri:#f87171;--pri2:#ef4444;--pri-soft:#3b1717;--ok:#4ade80;--ok-soft:#14301d;--warn:#fbbf24;--warn-soft:#3a2a0c;--bad:#f87171;
-  --c-bag:#fb923c;--c-home:#38bdf8;--c-car:#a78bfa;--c-plan:#4ade80;--c-guide:#fbbf24;--c-tel:#f87171;--shadow:none;--btn:#b91c1c}
+:root[data-theme="light"]{
+  --bg:#f3f6fb;--bg2:#ffffff;--card:#ffffff;--card2:#eef3fb;--line:#d9e2ef;--ink:#0f1a2c;--ink2:#46556d;--ink3:#7a879c;
+  --pri:#1d4ed8;--pri2:#2563eb;--pri-soft:#fde8e8;--btn:#1d4ed8;--btn-ink:#ffffff;--sos:#b91c1c;
+  --ok:#15803d;--ok-soft:#e3f4e8;--warn:#b45309;--warn-soft:#fdf0dc;--bad:#b91c1c;
+  --c-bag:#c2410c;--c-home:#0369a1;--c-car:#6d28d9;--c-plan:#15803d;--c-guide:#b45309;--c-tel:#b91c1c;
+  --shadow:0 1px 2px #0000000d,0 4px 14px #00000008;--glow:linear-gradient(#f3f6fb,#f3f6fb);
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-#app{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:calc(80px + var(--safe-b))}
-header.top{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid transparent}
+#app{max-width:720px;margin:0 auto;min-height:100vh;padding-bottom:calc(80px + var(--safe-b));background:var(--glow)}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 72%,transparent);padding:14px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid transparent}
 header.top .brand{flex:1;min-width:0}
-header.top h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top h1{margin:0;font-size:clamp(15.5px,4.4vw,19px);font-weight:900;letter-spacing:.01em;color:var(--pri);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header.top p{margin:2px 0 0;font-size:12.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.logo{width:40px;height:40px;border-radius:12px;background:var(--btn);display:grid;place-items:center;flex:none}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:grid;place-items:center;flex:none}
 .logo svg{width:24px;height:24px;color:#fff}
 .iconbtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none}
 .iconbtn svg{width:21px;height:21px}
 main{padding:4px 16px 16px}
 h2.v{font-size:22px;margin:6px 2px 14px;letter-spacing:-.01em}
-.sect{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--ink3);margin:22px 2px 10px}
+.sect{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--pri);margin:22px 2px 10px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
 .muted{color:var(--ink2)}.small{font-size:13px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 15px;font-weight:650}
-.btn.pri{background:var(--btn);border-color:var(--btn);color:#fff}
+.btn{border:1px solid var(--line);background:var(--card2);border-radius:12px;padding:11px 15px;font-weight:650}
+.btn.pri{background:var(--btn);border-color:var(--btn);color:var(--btn-ink)}
 .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
 .btn.ghost{background:transparent}
 .btn.dan{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}
@@ -62,7 +62,7 @@ h2.v{font-size:22px;margin:6px 2px 14px;letter-spacing:-.01em}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .qbtn{display:flex;align-items:center;gap:10px;border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--card);font-weight:700;text-align:left;box-shadow:var(--shadow)}
 .qbtn svg{width:24px;height:24px;flex:none}
-.qbtn.call{background:var(--btn);border-color:var(--btn);color:#fff}
+.qbtn.call{background:var(--sos);border-color:var(--sos);color:#fff}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile{border:1px solid var(--line);background:var(--card);border-radius:var(--r);padding:14px;text-align:left;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;min-height:118px}
 .tile .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--k) 14%,transparent);color:var(--k)}
@@ -74,7 +74,7 @@ h2.v{font-size:22px;margin:6px 2px 14px;letter-spacing:-.01em}
 .tabs button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:650;font-size:14px;display:flex;align-items:center;gap:7px;color:var(--ink2)}
 .tabs button svg{width:17px;height:17px;color:var(--k)}
 .tabs button em{font-style:normal;font-size:12px;color:var(--ink3)}
-.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}.tabs button.on em{color:var(--bg);opacity:.75}
+.tabs button.on{background:color-mix(in srgb,var(--k) 22%,var(--card));color:var(--ink);border-color:var(--k)}.tabs button.on em{color:var(--ink2)}
 .art svg{width:100%;height:auto;display:block;border-radius:var(--r)}
 .note{font-size:14px;color:var(--ink2);line-height:1.5;margin:12px 2px 8px}
 .count{font-size:12.5px;color:var(--ink3);margin:6px 2px 10px}
@@ -121,10 +121,10 @@ input.in:focus,select.in:focus,textarea.in:focus{border-color:var(--pri)}
 .tel{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
 .tel .num{font-size:22px;font-weight:800;color:var(--c-tel);min-width:64px}
 .tel .tx{flex:1}.tel .tx b{display:block}.tel .tx small{color:var(--ink3)}
-.tel .call{width:42px;height:42px;border-radius:50%;background:var(--btn);color:#fff;display:grid;place-items:center;flex:none}
+.tel .call{width:42px;height:42px;border-radius:50%;background:var(--sos);color:#fff;display:grid;place-items:center;flex:none}
 .tel .call svg{width:20px;height:20px}
 /* nav */
-nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
 nav.bottom .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
 nav.bottom button{border:0;background:none;padding:9px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:650;color:var(--ink3);min-width:0}
 nav.bottom button svg{width:23px;height:23px}
@@ -204,7 +204,7 @@ let ST=DEF();
 function load(){try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&typeof j==='object')ST=Object.assign(DEF(),j)}catch(e){}}
 let saveT=null;
 function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){toast('No se pudo guardar en este navegador')}},200)}
-function applyTheme(){const r=document.documentElement;if(ST.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',ST.theme)}
+function applyTheme(){const r=document.documentElement;if(ST.theme==='light')r.setAttribute('data-theme','light');else r.removeAttribute('data-theme');const m=document.querySelector('meta[name=theme-color]');if(m)m.content=ST.theme==='light'?'#f3f6fb':'#0a1220'}
 
 /* ========== CÁLCULOS ========== */
 const JUG=18.9; // garrafón de 5 galones
@@ -302,7 +302,7 @@ function expTag(iso){const dd=daysUntil(iso);if(dd<0)return '<span class="xp bad
 /* ========== ILUSTRACIONES PROPIAS ========== */
 function artBag(n){
  const pts=[['bag',40,44],['drop',40,88],['ok',40,132],['plan',280,44],['bolt',280,88],['phone',280,132]];
- return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-bag) 10%,var(--card))"/>
+ return `<svg viewBox="0 0 320 176" aria-hidden="true"><rect width="320" height="176" rx="18" fill="color-mix(in srgb,var(--c-bag) 8%,var(--card))"/>
  ${pts.map(([ic,x,y],i)=>`<line x1="${x<160?x+20:x-20}" y1="${y}" x2="${x<160?128:192}" y2="${76+i%3*26}" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 5"/><circle cx="${x}" cy="${y}" r="19" fill="var(--card)" stroke="var(--line)" stroke-width="1.5"/><g transform="translate(${x-11},${y-11}) scale(.92)" fill="none" stroke="var(--c-bag)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[ic==='bag'?'shield':ic]}</g>`).join('')}
  <g transform="translate(118,10)">
   <path d="M26 40 Q26 12 48 12 L58 12 Q80 12 80 40" fill="none" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/>
@@ -522,7 +522,7 @@ function vSettings(){
  h+=`<div class="sect">Familia</div><label class="f"><span>Nombre de la familia</span><input class="in" data-st="family" value="${esc(ST.family)}" placeholder="Ej.: Familia Pérez"></label>`;
  h+=`<label class="f"><span>Reserva en casa</span><select class="in" data-st="days">${[3,7,14].map(d=>`<option value="${d}" ${ST.days===d?'selected':''}>${d} días</option>`).join('')}</select></label>`;
  h+=`<div class="sect">Casas</div>`+hhEditor();
- h+=`<div class="sect">Apariencia</div><select class="in" data-st="theme">${[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(([v,l])=>`<option value="${v}" ${ST.theme===v?'selected':''}>${l}</option>`).join('')}</select>`;
+ h+=`<div class="sect">Apariencia</div><select class="in" data-st="theme">${[['auto','Azul oscuro (predeterminado)'],['light','Claro']].map(([v,l])=>`<option value="${v}" ${(ST.theme==='light'?'light':'auto')===v?'selected':''}>${l}</option>`).join('')}</select>`;
  h+=`<div class="sect">Respaldo</div><p class="small muted" style="margin:0 0 10px">Tus datos viven solo en este teléfono. Exporta un respaldo de vez en cuando o para pasarlo a otro teléfono.</p>
  <div class="btns"><button class="btn pri" id="expBtn">${svg('download','style="width:16px;height:16px;vertical-align:-3px"')} Exportar</button><button class="btn" id="impBtn">${svg('upload','style="width:16px;height:16px;vertical-align:-3px"')} Importar</button><button class="btn" id="printBtn">${svg('print','style="width:16px;height:16px;vertical-align:-3px"')} Imprimir todo</button></div>`;
  h+=`<div class="sect">App</div><div class="btns"><button class="btn" id="updBtn">${svg('refresh','style="width:16px;height:16px;vertical-align:-3px"')} Buscar actualización</button><button class="btn dan" id="wipeBtn">Borrar todos los datos</button></div>`;

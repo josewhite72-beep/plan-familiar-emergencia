@@ -1,5 +1,5 @@
 // Plan Familiar de Emergencia — service worker (primero red, respaldo en caché)
-const CACHE = 'pfe-v1';
+const CACHE = 'pfe-v2';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
