@@ -482,7 +482,7 @@ function vHome(){
  if(!a.expired&&!a.soon&&!a.reviewDue)h+=`<div class="alert ok">${svg('ok')} Todo al día</div>`;
  h+=`</div></div></div></div>`;
  h+=`<div class="quick"><a class="qbtn call" href="tel:911" style="text-decoration:none">${svg('phone')} Llamar 911</a><button class="qbtn" id="shareBtn">${svg('share')} Compartir plan</button></div>`;
- h+=`<div class="sect">Tu kit</div><div class="tiles">`;
+ h+=`<div class="sect" style="display:flex;justify-content:space-between;align-items:center">Tu kit<button class="btn sm" data-go="settings" style="letter-spacing:0;text-transform:none">${svg('edit','style="width:15px;height:15px;vertical-align:-3px"')} Editar casas</button></div><div class="tiles">`;
  sections().forEach(s=>{const q=prog(s.items);h+=`<button class="tile" style="--k:var(${s.k})" data-gokit="${s.id}"><div class="ic">${svg(s.ic)}</div><b>${esc(s.name)}</b><small>${q.d}/${q.n} listos</small><div class="bar"><i style="width:${q.p}%"></i></div></button>`});
  const pp=prog(planItems());
  h+=`<button class="tile" style="--k:var(--c-plan)" data-go="plan"><div class="ic">${svg('plan')}</div><b>Plan familiar</b><small>${pp.d}/${pp.n} listos</small><div class="bar"><i style="width:${pp.p}%"></i></div></button>`;
@@ -503,6 +503,7 @@ function vKit(v){
   s.id==='car'?'Kit fijo en el carro. Mantén el tanque siempre por encima de la mitad.':
   `Reserva para ${ST.days} días en casa. Compra lo que la familia ya come y ve rotándolo para que no se venza.${totalPeople()-(+s.hh.people||0)>0?' Esta casa también puede servir de refugio a las demás.':''}`;
  const q=prog(s.items);
+ if(s.hh)h+=`<div class="btns" style="margin-top:10px"><button class="btn sm" data-hedit="${s.hh.id}">${svg('edit','style="width:15px;height:15px;vertical-align:-3px"')} Editar esta casa</button></div>`;
  h+=`<p class="note">${note}</p><div class="bar" style="height:9px"><i style="width:${q.p}%"></i></div><p class="count">${q.d} de ${q.n} listos</p>`;
  h+=s.items.map(itemRow).join('');
  h+='</main>';return h;
@@ -598,6 +599,22 @@ function personEditor(p){
   if(isNew)setTimeout(()=>m.querySelector('#pN').focus(),60);
  });
 }
+function houseEditor(hh){
+ const isNew=!hh;const d=hh?Object.assign({},hh):{id:uid(),name:`Casa ${ST.households.length+1}`,people:1,babies:0,elderly:0,pets:0,car:false};
+ const step=(k,l,min)=>`<label class="f" style="margin:0"><span>${l}</span><div class="stepper"><button type="button" data-ms="${k}" data-d="-1" data-min="${min}">−</button><b id="ms_${k}">${+d[k]||0}</b><button type="button" data-ms="${k}" data-d="1" data-min="${min}">+</button></div></label>`;
+ modal(`<h3>${isNew?'Agregar casa':'Editar casa'}</h3>
+ <label class="f"><span>Nombre de la casa</span><input class="in" id="hN" value="${esc(d.name)}"></label>
+ <div class="row2">${step('people','Personas',1)}${step('babies','Bebés (0-2)',0)}${step('elderly','Adultos mayores',0)}${step('pets','Mascotas',0)}</div>
+ <label class="switch" style="margin-top:8px"><span class="small" style="font-weight:600">Esta casa tiene carro</span><input type="checkbox" id="hC" ${d.car?'checked':''}></label>
+ <p class="small muted" style="margin:6px 0 12px">Las cantidades de la lista se recalculan solas. Lo que ya marcaste se conserva.</p>
+ <div class="btns"><button class="btn pri" id="hS">Guardar</button><button class="btn" id="hX">Cancelar</button>${!isNew&&ST.households.length>1?'<button class="btn dan" id="hD">Quitar casa</button>':''}</div>`,(m,close)=>{
+  m.querySelectorAll('[data-ms]').forEach(b=>b.onclick=()=>{const k=b.dataset.ms;d[k]=Math.max(+b.dataset.min,(+d[k]||0)+(+b.dataset.d));m.querySelector('#ms_'+k).textContent=d[k]});
+  m.querySelector('#hX').onclick=close;
+  m.querySelector('#hS').onclick=()=>{d.name=m.querySelector('#hN').value.trim()||'Casa';d.car=m.querySelector('#hC').checked;
+   if(isNew)ST.households.push(d);else Object.assign(ST.households.find(x=>x.id===d.id),d);save();close();keepScroll(render);toast('Casa actualizada')};
+  const del=m.querySelector('#hD');if(del)del.onclick=()=>{if(!confirm('¿Quitar esta casa? Se pierden sus marcas.'))return;ST.households=ST.households.filter(x=>x.id!==d.id);ST.persons.forEach(p=>{if(p.hh===d.id)p.hh=ST.households[0]?.id});save();close();go({name:'kit'},true)};
+ });
+}
 function contactEditor(c){
  const isNew=!c;c=c||{id:uid(),name:'',phone:'',rel:''};
  modal(`<h3>${isNew?'Agregar contacto':'Editar contacto'}</h3>
@@ -667,6 +684,7 @@ function bind(){
   if(d.guide){go({name:'guide',id:d.guide});return}
   if(d.chk){ST.done[d.chk]?delete ST.done[d.chk]:ST.done[d.chk]=true;save();keepScroll(render);return}
   if(d.person){personEditor(ST.persons.find(p=>p.id===d.person));return}
+  if(d.hedit){houseEditor(ST.households.find(h=>h.id===d.hedit));return}
   if(d.cedit){e.preventDefault();contactEditor(ST.contacts.find(c=>c.id===d.cedit));return}
   if(d.hstep){const hh=ST.households.find(x=>x.id===el.closest('[data-hh]').dataset.hh);hh[d.hstep]=Math.max(+d.min,(+hh[d.hstep]||0)+(+d.d));save();keepScroll(render);return}
   if(d.hdel){if(confirm('¿Quitar esta casa? Se pierden sus marcas.')){ST.households=ST.households.filter(x=>x.id!==d.hdel);ST.persons.forEach(p=>{if(p.hh===d.hdel)p.hh=ST.households[0]?.id});save();keepScroll(render)}return}
