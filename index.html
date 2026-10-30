@@ -90,6 +90,8 @@ h2.v{font-size:22px;margin:6px 2px 14px;letter-spacing:-.01em}
 .xp{display:inline-block;font-size:12px;border:1px dashed var(--line);border-radius:8px;padding:2px 8px;color:var(--ink3)}
 .xp.warn{border:1px solid var(--warn);color:var(--warn);background:var(--warn-soft)}.xp.bad{border:1px solid var(--bad);color:var(--bad);background:var(--pri-soft)}
 .sub{font-size:12.5px;color:var(--ink3);margin-top:3px}
+.blinks{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.blink{border:1px solid var(--line);background:var(--card2);color:var(--pri);border-radius:8px;padding:3px 9px;font-size:12.5px;font-weight:650}
 /* forms */
 label.f{display:block;margin-bottom:12px}
 label.f>span{display:block;font-size:13px;color:var(--ink2);margin-bottom:5px;font-weight:600}
@@ -375,13 +377,59 @@ const GUIDES=[
 ];
 const PHASE_COL={'Antes':'--c-plan','Durante':'--c-tel','Después':'--c-home'};
 
+
+/* ========== MODO INTEGRADO EN LA APP SUPERVIVENCIA ========== */
+const EMBED=/[?&]app=sv\b/.test(location.search);
+const NATIVE=()=>window.Android&&typeof window.Android.share==='function';
+// Páginas de los libros (Towell = ES, SAS = EN) relacionadas con cada guía y elemento
+const BOOK_LINKS={
+ g_sismo:[['sas',585,'SAS: Earthquake']],
+ g_inund:[['towell',80,'Fenómenos atmosféricos'],['sas',578,'SAS: Flood']],
+ g_fuego:[['towell',246,'Peligros ambientales'],['sas',566,'SAS: Fire']],
+ g_agua:[['towell',200,'Tratar el agua'],['towell',198,'Transportar y almacenar agua']],
+ g_luz:[['sas',595,'SAS: Home front']],
+ g_vias:[['towell',234,'Analizar la situación']],
+ g_evac:[['towell',234,'Analizar la situación'],['towell',236,'Señales para el rescate']],
+ agua:[['towell',200,'Tratar el agua']],aseo:[['towell',198,'Almacenar agua']],cloro:[['towell',200,'Tratar el agua']],
+ b_agua:[['towell',200,'Tratar el agua']],b_botiquin:[['towell',260,'Primeros auxilios']],b_meds:[['towell',260,'Primeros auxilios']],
+ botiquin:[['towell',260,'Primeros auxilios']],b_fuego:[['towell',118,'Hacer fuego']],b_silbato:[['towell',236,'Señales para el rescate']],
+ b_navaja:[['towell',146,'Herramientas para cortar']],b_radio:[['towell',236,'Señales para el rescate']],
+ gas:[['towell',204,'Cocina de supervivencia']],c_mapa:[['towell',66,'Mapas']],c_botiquin:[['towell',260,'Primeros auxilios']],
+ f_simulacro:[['towell',24,'Plan de acción de emergencia']]
+};
+function bookLinks(key){
+ if(!EMBED)return'';const L=BOOK_LINKS[key];if(!L)return'';
+ return `<div class="blinks">${L.map(([b,p,t])=>`<button class="blink" data-book="${b}:${p}">${svg('guide','style="width:13px;height:13px;vertical-align:-2px"')} ${esc(t)} · p. ${p}</button>`).join('')}</div>`;
+}
+function itemKey(id){const m=id.match(/^h_[^_]+_(.+)$/);return m?m[1]:id}
+function toSurvival(hash){location.href='../index.html#'+hash}
+function migrateFromSurvival(){
+ if(!EMBED)return;
+ try{if(localStorage.getItem(KEY))return}catch(e){return}
+ let u=null;try{u=JSON.parse(localStorage.getItem('sv_user')||'null')}catch(e){}
+ const k=u&&u.kit;if(!k||(!Object.keys(k.done||{}).length&&!Object.keys(k.plan||{}).length&&!Object.keys(k.exp||{}).length))return;
+ const pen={id:uid(),name:'Casa Penonomé',people:2,babies:0,elderly:0,pets:0,car:true};
+ const nat={id:uid(),name:'Casa Natá',people:4,babies:0,elderly:0,pets:0,car:false};
+ const MAP={c_herramientas:'c_herr',c_triangulos:'c_triang',c_mapas:'c_mapa',n_tanque:`h_${nat.id}_aseo`};
+ const conv=id=>{if(MAP[id])return MAP[id];let m=id.match(/^p_(.+)$/);if(m)return `h_${pen.id}_${m[1]}`;m=id.match(/^n_(.+)$/);if(m)return `h_${nat.id}_${m[1]}`;return id};
+ const st=DEF();st.setup=true;st.days=14;st.households=[pen,nat];
+ Object.keys(k.done||{}).forEach(id=>{if(k.done[id])st.done[conv(id)]=true});
+ Object.entries(k.exp||{}).forEach(([id,v])=>{if(v)st.exp[conv(id)]=v});
+ const P=k.plan||{};const PM={meet1:'meet1',meet2:'meet2',meet3:'meetMid',contact:'outContact',routes:'routes',hours:'hours',dest:'dest',who:'pickup'};
+ Object.entries(PM).forEach(([a,b])=>{if(P[a])st.plan[b]=P[a]});
+ if(P.health)st.persons.push({id:uid(),name:'Notas de salud (migradas)',hh:pen.id,phone:'',needs:P.health});
+ if(k.review)st.review=k.review;
+ ST=st;try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}
+ setTimeout(()=>toast('Se trasladó tu Kit anterior: casas, marcas y plan'),300);
+}
+
 /* ========== ROUTER ========== */
 let VIEW={name:'home'};
 function go(v,replace){VIEW=v;try{replace?history.replaceState(v,''):history.pushState(v,'')}catch(e){}render();window.scrollTo(0,0)}
 window.addEventListener('popstate',e=>{document.querySelectorAll('.modal').forEach(m=>m.remove());VIEW=e.state||{name:'home'};render()});
 
 function header(title,sub,back){
- return `<header class="top">${back?`<button class="iconbtn" data-back aria-label="Atrás">${svg('back')}</button>`:`<img class="logo" src="icon-192.png" alt="">`}
+ return `<header class="top">${back?`<button class="iconbtn" data-back aria-label="Atrás">${svg('back')}</button>`:EMBED?`<button class="iconbtn" data-tosv aria-label="Volver a Supervivencia">${svg('back')}</button>`:`<img class="logo" src="icon-192.png" alt="">`}
  <div class="brand"><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div>
  ${back?'':`<button class="iconbtn" data-go="settings" aria-label="Ajustes">${svg('gear')}</button>`}</header>`;
 }
@@ -462,7 +510,7 @@ function vKit(v){
 function itemRow(it){
  const on=!!ST.done[it.id],iso=ST.exp[it.id];
  return `<div class="item ${on?'on':''}"><button class="chk" data-chk="${it.id}" aria-pressed="${on}" aria-label="Marcar">${on?svg('check'):''}</button>
- <div class="tx"><span>${esc(it.t)}${it.q?` · <span class="qty">${esc(it.q)}</span>`:''}</span>${it.e?`<div><label class="exp">${iso?expTag(iso):'<span class="xp">+ fecha de vencimiento</span>'}<input type="date" data-exp="${it.id}" value="${iso||''}" aria-label="Fecha de vencimiento"></label></div>`:''}</div></div>`;
+ <div class="tx"><span>${esc(it.t)}${it.q?` · <span class="qty">${esc(it.q)}</span>`:''}</span>${bookLinks(itemKey(it.id))}${it.e?`<div><label class="exp">${iso?expTag(iso):'<span class="xp">+ fecha de vencimiento</span>'}<input type="date" data-exp="${it.id}" value="${iso||''}" aria-label="Fecha de vencimiento"></label></div>`:''}</div></div>`;
 }
 const PLAN_FIELDS=[
  ['meet1','Punto de encuentro cerca de casa','Ej.: el parque o la escuela del barrio'],
@@ -496,6 +544,7 @@ function vGuide(v){
  const g=GUIDES.find(x=>x.id===v.id)||GUIDES[0];
  let h=header(g.t,g.d,true)+'<main>';
  g.ph.forEach(([name,steps])=>{h+=`<div class="card phase" style="--k:var(${PHASE_COL[name]||g.k})"><h3>${esc(name)}</h3><ol>${steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>`});
+ if(EMBED){h+=`<div class="card"><b>En tus libros</b>${bookLinks('g_'+g.id)}<button class="btn" data-ask="${esc(g.t)}" style="margin-top:10px;width:100%">${svg('guide','style="width:16px;height:16px;vertical-align:-3px"')} Preguntar al libro: ${esc(g.t)}</button></div>`}
  h+=`<a class="qbtn call" href="tel:911" style="text-decoration:none;justify-content:center">${svg('phone')} Llamar 911</a></main>`;
  return h;
 }
@@ -576,10 +625,12 @@ function planText(){
 }
 async function sharePlan(){
  const txt=planText();
+ if(NATIVE()){try{window.Android.share(txt)}catch(e){}return}
  try{if(navigator.share){await navigator.share({title:'Plan de emergencia',text:txt});return}}catch(e){if(e&&e.name==='AbortError')return}
  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
 function printAll(){
+ if(NATIVE()){toast('Para imprimir, usa Compartir y envíalo a tu correo o a WhatsApp');sharePlan();return}
  const P=ST.plan;const tbl=(rows,head)=>`<table>${head?`<tr>${head.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>`:''}${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
  let h=`<h1>Plan de emergencia — ${esc(ST.family||'Mi familia')}</h1><div>Actualizado: ${new Date().toLocaleDateString('es-PA')}</div>`;
  h+=`<h2>Plan de comunicación</h2>`+tbl(PLAN_FIELDS.map(([k,l])=>[esc(l),esc(P[k]||'')]));
@@ -589,6 +640,7 @@ function printAll(){
  $('#print').innerHTML=h;setTimeout(()=>window.print(),50);
 }
 function exportData(){
+ if(NATIVE()){try{window.Android.share(JSON.stringify({app:'plan-familiar-emergencia',date:new Date().toISOString(),data:ST}))}catch(e){}return}
  const blob=new Blob([JSON.stringify({app:'plan-familiar-emergencia',date:new Date().toISOString(),data:ST},null,1)],{type:'application/json'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='plan-emergencia-'+todayISO()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
 }
@@ -608,6 +660,9 @@ function bind(){
   if('back' in d){history.length>1?history.back():go({name:'home'},true);return}
   if(d.go){go({name:d.go});return}
   if(d.gokit){go({name:'kit',tab:d.gokit});return}
+  if('tosv' in d){location.href='../index.html';return}
+  if(d.book){toSurvival('open='+d.book);return}
+  if(d.ask){toSurvival('ask='+encodeURIComponent(d.ask));return}
   if(d.tab2){go({name:'kit',tab:d.tab2},true);return}
   if(d.guide){go({name:'guide',id:d.guide});return}
   if(d.chk){ST.done[d.chk]?delete ST.done[d.chk]:ST.done[d.chk]=true;save();keepScroll(render);return}
@@ -636,10 +691,12 @@ function bind(){
  app.querySelectorAll('[data-exp]').forEach(el=>{el.onchange=()=>{el.value?ST.exp[el.dataset.exp]=el.value:delete ST.exp[el.dataset.exp];save();keepScroll(render)}});
 }
 function keepScroll(fn){const y=window.scrollY;fn();window.scrollTo(0,y)}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="tel:"]');if(a&&window.Android&&typeof window.Android.dial==='function'){e.preventDefault();try{window.Android.dial(a.getAttribute('href').slice(4))}catch(err){}}},true);
 $('#nav').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;const t=b.dataset.tab;if(VIEW.name===t)return;go({name:t})};
 
 /* ========== INICIO ========== */
 load();
+migrateFromSurvival();
 try{history.replaceState({name:'home'},'')}catch(e){}
 render();
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
